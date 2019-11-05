@@ -2,39 +2,58 @@
 #include <vector>
 #include <algorithm>
 
-int no_inversions = 0;
+#define INT_MAX 2147483647
 
-int ans[10001];
-
-void merge_sort(std::vector<int> &arr, int left, int right)
+int merge_sort(std::vector<int> &arr)
 {
-	if (left == right)
-		return;
+	int size = arr.size();
 
-	int mid = (left + right)/2;
+	if (size == 1)
+		return 0; // no inversions here
 
-	merge_sort(arr, left, mid);
-	merge_sort(arr, mid+1, right);
+	int no_inversions = 0;
 
-	int i = left, j = mid + 1, k = left;
+	std::vector<int> first_half, second_half;
 
-	while (i <= mid && j <= right)
+	// after creating the segments, assign
+	
+	for (int i = 0; i < size/2; i++)
+		first_half.push_back(arr[i]);
+
+	for (int i = size/2; i < size; i++)
+		second_half.push_back(arr[i]);
+
+
+	// recursive calls
+	no_inversions += merge_sort(first_half);
+	no_inversions += merge_sort(second_half);
+
+
+	// adding a sentinel to avoid aditional checks 
+	first_half.push_back(INT_MAX);
+	second_half.push_back(INT_MAX);
+
+
+	// declare two pointers to iterate through each half
+	
+	int p = 0;
+	int q = 0;
+
+	for (int i = 0; i < size; i++)
 	{
-		if (arr[i] > arr[j])
+		/* if the element (a not checked one) in the first half is bigger 
+		 * than another unchecked one in the second half
+		 */
+		if (first_half[p] > second_half[q])
 		{
-			ans[k++] = arr[j++];	
-			no_inversions += (j - k);
+			arr[i] = second_half[q++];
+			no_inversions += first_half.size() - p - 1;
 		}
 		else
-			ans[k++] = arr[i++];
+			arr[i] = first_half[p++]; // just add to the array and increase the first pointer
 	}
 
-	while (i <= mid)
-		ans[k++] = arr[i++];
-
-	for (i = left; i < k; i++)
-		arr[i] = ans[i];
-
+	return no_inversions;
 }
 
 int main()
@@ -45,19 +64,20 @@ int main()
 	std::cin >> no_elements;
 	
 	std::cout << "Digite os " << no_elements << " numeros desejados:\n";
-	std::vector<int> v(no_elements+1);
+	std::vector<int> v(no_elements);
 
-	for (int i = 1; i <= no_elements; i++)
+	for (int i = 0; i < no_elements; i++)
 	{
 		std::cin >> v[i];
 	}
 
-	merge_sort(v, 1, no_elements);
+	int no_inversions = merge_sort(v);
+	
+	std::cout << "\nO numero total de inversoes eh: " << no_inversions << "\n\n";
 
-	std::cout << "O numero total de inversoes eh: " << no_inversions << "\n";
-
-	std::cout << v[1];
-	for (int i = 2; i <= no_elements; i++)
+	std::cout << "Array ordenada: \n";
+	std::cout << v[0];
+	for (int i = 1; i < no_elements; i++)
 		std::cout << " " << v[i];
 
 	std::cout << "\n";
