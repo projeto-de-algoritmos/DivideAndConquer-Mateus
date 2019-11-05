@@ -16,7 +16,7 @@ void merge_sort(std::vector<int> &arr, int left, int right)
 	merge_sort(arr, left, mid);
 	merge_sort(arr, mid+1, right);
 
-	int i = 1, j = mid + 1, k = 1;
+	int i = left, j = mid + 1, k = left;
 
 	while (i <= mid && j <= right)
 	{
@@ -32,7 +32,7 @@ void merge_sort(std::vector<int> &arr, int left, int right)
 	while (i <= mid)
 		ans[k++] = arr[i++];
 
-	for (i = 1; i < k; i++)
+	for (i = left; i < k; i++)
 		arr[i] = ans[i];
 
 }
@@ -59,4 +59,6 @@ int main()
 	std::cout << v[1];
 	for (int i = 2; i <= no_elements; i++)
 		std::cout << " " << v[i];
+
+	std::cout << "\n";
 }
