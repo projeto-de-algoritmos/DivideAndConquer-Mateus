@@ -10,4 +10,4 @@
 
 # Sobre
 
-Implementação do algoritmo do contador de inversões utilizando merge sort
+Implementação do algoritmo do contador de inversões utilizando merge sort e do algoritmo de karatsuba
